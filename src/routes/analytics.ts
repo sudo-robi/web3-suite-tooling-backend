@@ -34,6 +34,56 @@ router.get('/tracked', async (_req: Request, res: Response) => {
   res.json(result);
 });
 
+router.post('/tracked', async (req: Request, res: Response) => {
+  const { contractId } = req.body;
+
+  if (!contractId || typeof contractId !== 'string') {
+    throw new AppError(400, 'contractId is required and must be a string');
+  }
+
+  // In production, this would invoke the analytics contract's track_contract method
+  res.json({
+    success: true,
+    data: {
+      message: 'Contract tracking requires admin-signed transaction',
+      contractId,
+    },
+    timestamp: Date.now(),
+  });
+});
+
+router.post('/metrics', async (req: Request, res: Response) => {
+  const { contractId, metricName, value } = req.body;
+
+  if (!contractId || !metricName || value === undefined) {
+    throw new AppError(400, 'contractId, metricName, and value are required');
+  }
+
+  // In production, this would invoke the analytics contract's record_metric method
+  res.json({
+    success: true,
+    data: {
+      message: 'Metric recording requires signed transaction',
+      contractId,
+      metricName,
+      value,
+    },
+    timestamp: Date.now(),
+  });
+});
+
+router.get('/snapshot', async (_req: Request, res: Response) => {
+  // In production, this would invoke the analytics contract's take_snapshot method
+  res.json({
+    success: true,
+    data: {
+      message: 'Snapshot requires contract invocation',
+      timestamp: Date.now(),
+    },
+    timestamp: Date.now(),
+  });
+});
+
 router.get('/health', (_req: Request, res: Response) => {
   res.json({
     success: true,

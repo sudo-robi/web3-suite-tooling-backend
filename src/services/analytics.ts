@@ -5,6 +5,7 @@ import {
   symbolToScVal,
   addressToScVal,
   i128ToScVal,
+  u64ToScVal,
 } from './stellar.js';
 import type { ContractMetric, MetricSummary, ApiResponse } from '../types/index.js';
 import { logger } from '../config/logger.js';
@@ -14,7 +15,7 @@ export async function getMetric(index: number): Promise<ApiResponse<ContractMetr
     const simulated = await invokeContract(
       config.contracts.analytics,
       'get_metric',
-      [require('stellar-sdk').nativeToScVal(index, { type: 'u64' })]
+      [u64ToScVal(index)]
     );
 
     if ('result' in simulated) {
